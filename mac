@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+
+# ******************************************* #
+#                                             #
+#    ** Macuyler's Automation Cli (MAC) **    #
+# This is a cli tool for automating all the   #
+# things I don't want to do!                  #
+#                                             #
+# ******************************************* #
+
+"""
+
+# Structure
+ - mac
+  - install (Install scripts from github into a bin)
+  - remove  (Remove installed scripts)
+  - upgrade (Upgrade an install scripts)
+
+scripts bin -> ~/.macbin/
+"""
+
+import os, sys
+from subprocess import Popen, PIPE
+from pathlib import Path
+from src.output import show_usage, show_install_use
+
+COMMANDS = ['install', 'remove', 'upgrade']
+SHORT_COMMANDS = list(map(lambda x: x[0], COMMANDS))
+
+NO_FoD = 'No such file or directory'
+FATAL = 'fatal: '
+
+def get_installed():
+    installed = []
+    p = Popen('ls ~/.macbin', shell=True, stdout=PIPE, stderr=PIPE)
+    out, err = p.communicate()
+    if NO_FoD in err.decode():
+        Popen('mkdir ~/.macbin', shell=True).communicate()
+    elif b'\n' in out:
+        installed = list(map(lambda pkg: pkg.decode(), out.split(b'\n')))
+        installed = list(filter(lambda pkg: len(pkg) > 0, installed))
+    return installed
+
+def install(args):
+    pkgs = get_installed()
+    if len(args) == 1:
+        url = args[0]
+        us = url.split('/')
+        name = us[len(us) -1].replace('.git', '')
+        print(f'\n % Cloning {name} from {url}')
+        if name not in pkgs:
+            _, err = Popen(f'cd ~/.macbin/ && git clone {url}', shell=True, stderr=PIPE).communicate()
+            if FATAL not in err.decode():
+                with open(f'{Path.home()}/.macbin/.path', 'a')  as path:
+                    path.write(f':{Path.home()}/.macbin/{name}')
+                    path.close()
+                print(f' % Successfully installed {name}!')
+            else:
+                print()
+                print(err.decode())
+                print(f' * Failed to install {name}!')
+        else:
+            print(f' * Package called "{name}" already installed!')
+        print(' % All Dunn!\n')
+    else:
+        show_install_use()
+    return
+
+def remove(args):
+    # TODO: Implement remove
+    return
+
+def upgrade(args):
+    # TODO: Implement upgrade
+    return
+
+CMD_FUNCS = {
+    'i': install,
+    'r': remove,
+    'u': upgrade,
+}
+
+def main(cmd, args):
+    cmd = cmd.strip().lower()
+    if cmd in COMMANDS or cmd in SHORT_COMMANDS:
+        func = CMD_FUNCS[cmd[0]]
+        func(args)
+    else:
+        show_usage(COMMANDS)
+    return
+
+if __name__ == '__main__':
+    args = sys.argv
+    if len(args) > 1:
+        command = args[1]
+        main(command, args[2:])
+    else:
+        show_usage(COMMANDS)
+
