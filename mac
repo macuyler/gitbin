@@ -22,7 +22,7 @@ scripts bin -> ~/.macbin/
 import os, sys
 from subprocess import Popen, PIPE
 from pathlib import Path
-from src.output import show_usage, show_install_use
+from src.output import show_usage, show_install_use, show_remove_use
 
 COMMANDS = ['install', 'remove', 'upgrade']
 SHORT_COMMANDS = list(map(lambda x: x[0], COMMANDS))
@@ -67,7 +67,27 @@ def install(args):
     return
 
 def remove(args):
-    # TODO: Implement remove
+    pkgs = get_installed()
+    if len(args) == 1:
+        name = args[0]
+        print(f'\n % Removing {name} from macbin')
+        if name in pkgs:
+            Popen(f'rm -rf ~/.macbin/{name}', shell=True).communicate()
+            new_path = []
+            with open(f'{Path.home()}/.macbin/.path', 'r') as path:
+                ps  = path.readline().strip().split(':')
+                fps = list(filter(lambda x: x.replace(f'{Path.home()}/.macbin/', '') != name, ps))
+                new_path = ':'.join(fps)
+                path.close()
+            with open(f'{Path.home()}/.macbin/.path', 'w') as path:
+                path.write(new_path)
+                path.close()
+            print(f' % Successfully removed {name}')
+        else:
+            print(f' * Package called "{name}" not installed!')
+        print(' % All Dunn!\n')
+    else:
+        show_remove_use()
     return
 
 def upgrade(args):

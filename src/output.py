@@ -12,3 +12,9 @@ def show_install_use():
     print()
     return
 
+def show_remove_use():
+    print('\n Usage: ')
+    print('  - mac remove pkg-name')
+    print()
+    return
+
