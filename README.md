@@ -9,11 +9,12 @@ This is a cli tool for automating all the things I don't want to do!
   - upgrade (Upgrade an install scripts)
 
 ## Setup
+1. Run the following:
 ```
 cd /some/dir
 git clone https://github.com/Macuyler/mac.git
 ```
-Add the following to your shell rc file (bashrc, zshrc, etc.)
+2. Add the following to your shell rc file (bashrc, zshrc, etc.)
 ```
 export PATH="$PATH:/some/dir/mac"
 export PATH="$PATH$(cat ~/.macbin/.path)"
