@@ -22,13 +22,14 @@ scripts bin -> ~/.macbin/
 import os, sys
 from subprocess import Popen, PIPE
 from pathlib import Path
-from src.output import show_usage, show_install_use, show_remove_use
+from src.output import show_usage
 
 COMMANDS = ['install', 'remove', 'upgrade']
 SHORT_COMMANDS = list(map(lambda x: x[0], COMMANDS))
 
 NO_FoD = 'No such file or directory'
 FATAL = 'fatal: '
+COULD_NOT_READ = 'Could not read from remote repository.'
 
 def get_installed():
     installed = []
@@ -63,7 +64,7 @@ def install(args):
             print(f' * Package called "{name}" already installed!')
         print(' % All Dunn!\n')
     else:
-        show_install_use()
+        show_usage(sub='install git-repo')
     return
 
 def remove(args):
@@ -87,11 +88,27 @@ def remove(args):
             print(f' * Package called "{name}" not installed!')
         print(' % All Dunn!\n')
     else:
-        show_remove_use()
+        show_usage(sub='remove pkg-name')
     return
 
 def upgrade(args):
-    # TODO: Implement upgrade
+    pkgs = get_installed()
+    if len(args) == 1:
+        name = args[0]
+        print(f'\n % Upgrading {name} from macbin')
+        if name in pkgs:
+            _, err = Popen(f'cd ~/.macbin/{name} && git pull', shell=True, stdout=PIPE, stderr=PIPE).communicate()
+            if COULD_NOT_READ in err.decode():
+                print()
+                print(err.decode())
+                print(f' * Failed to upgrade {name}!')
+            else:
+                print(f' % Successfully upgraded {name}!')
+        else:
+            print(f' * Package called "{name}" not installed!')
+        print(' % All Dunn!\n')
+    else:
+        show_usage(sub='upgrade pkg-name')
     return
 
 CMD_FUNCS = {

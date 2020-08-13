@@ -1,20 +1,10 @@
 
-def show_usage(commands):
+def show_usage(commands=[], sub=None):
     print('\n Usage: ')
     for cmd in commands:
         print(f'  - mac {cmd}')
-    print()
-    return
-
-def show_install_use():
-    print('\n Usage: ')
-    print('  - mac install git-repo-url')
-    print()
-    return
-
-def show_remove_use():
-    print('\n Usage: ')
-    print('  - mac remove pkg-name')
+    if sub != None:
+        print(f'  - mac {sub}')
     print()
     return
 
