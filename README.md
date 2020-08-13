@@ -2,11 +2,14 @@
 # Macuyler's Automation Cli (MAC)
 This is a cli tool for automating all the things I don't want to do!    
 
+## Features
+ - **macbin**: A utility that allows you to quickly clone github repos and automatically add them to your path.
+
 ## Structure
 - mac
-  - install (Install scripts from github into a bin)
-  - remove  (Remove installed scripts)
-  - upgrade (Upgrade an install scripts)
+  - install (macbin | Install repos from github)
+  - remove  (macbin | Remove installed repos)
+  - upgrade (macbin | Upgrade installed repos)
 
 ## Setup
 1. Run the following:
