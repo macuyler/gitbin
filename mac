@@ -22,7 +22,7 @@ scripts bin -> ~/.macbin/
 import os, sys
 from subprocess import Popen, PIPE
 from pathlib import Path
-from src.output import show_usage
+from src.output import show_usage, log
 
 COMMANDS = ['install', 'remove', 'upgrade']
 SHORT_COMMANDS = list(map(lambda x: x[0], COMMANDS))
@@ -48,21 +48,20 @@ def install(args):
         url = args[0]
         us = url.split('/')
         name = us[len(us) -1].replace('.git', '')
-        print(f'\n % Cloning {name} from {url}')
+        log(f'Cloning {name} from {url}', pad=True)
         if name not in pkgs:
             _, err = Popen(f'cd ~/.macbin/ && git clone {url}', shell=True, stderr=PIPE).communicate()
             if FATAL not in err.decode():
                 with open(f'{Path.home()}/.macbin/.path', 'a')  as path:
                     path.write(f':{Path.home()}/.macbin/{name}')
                     path.close()
-                print(f' % Successfully installed {name}!')
+                log(f'Successfully installed {name}!')
             else:
-                print()
-                print(err.decode())
-                print(f' * Failed to install {name}!')
+                log(err.decode(), blank=True, pad=True)
+                log(f'Failed to install {name}!', err=True)
         else:
-            print(f' * Package called "{name}" already installed!')
-        print(' % All Dunn!\n')
+            log(f'Package called "{name}" already installed!', err=True)
+        log(dunn=True)
     else:
         show_usage(sub='install git-repo')
     return
@@ -71,7 +70,7 @@ def remove(args):
     pkgs = get_installed()
     if len(args) == 1:
         name = args[0]
-        print(f'\n % Removing {name} from macbin')
+        log(f'Removing {name} from macbin', pad=True)
         if name in pkgs:
             Popen(f'rm -rf ~/.macbin/{name}', shell=True).communicate()
             new_path = []
@@ -83,10 +82,10 @@ def remove(args):
             with open(f'{Path.home()}/.macbin/.path', 'w') as path:
                 path.write(new_path)
                 path.close()
-            print(f' % Successfully removed {name}')
+            log(f'Successfully removed {name}')
         else:
-            print(f' * Package called "{name}" not installed!')
-        print(' % All Dunn!\n')
+            log(f'Package called "{name}" not installed!', err=True)
+        log(dunn=True)
     else:
         show_usage(sub='remove pkg-name')
     return
@@ -95,18 +94,17 @@ def upgrade(args):
     pkgs = get_installed()
     if len(args) == 1:
         name = args[0]
-        print(f'\n % Upgrading {name} from macbin')
+        log(f'Upgrading {name} from macbin', pad=True)
         if name in pkgs:
             _, err = Popen(f'cd ~/.macbin/{name} && git pull', shell=True, stdout=PIPE, stderr=PIPE).communicate()
             if COULD_NOT_READ in err.decode():
-                print()
-                print(err.decode())
-                print(f' * Failed to upgrade {name}!')
+                log(err.decode, blank=True, pad=True)
+                log(f'Failed to upgrade {name}!', err=True)
             else:
-                print(f' % Successfully upgraded {name}!')
+                log(f'Successfully upgraded {name}!')
         else:
-            print(f' * Package called "{name}" not installed!')
-        print(' % All Dunn!\n')
+            log(f'Package called "{name}" not installed!', err=True)
+        log(dunn=True)
     else:
         show_usage(sub='upgrade pkg-name')
     return
