@@ -9,14 +9,14 @@
 # ******************************************* #
 
 """
+# Usage
+- mac
+  - install (Install repos from github)
+  - remove  (Remove installed repos)
+  - upgrade (Upgrade installed repos)
 
-# Structure
- - mac
-  - install (Install scripts from github into a bin)
-  - remove  (Remove installed scripts)
-  - upgrade (Upgrade an install scripts)
-
-scripts bin -> ~/.macbin/
+# Info
+repos bin -> ~/.macbin/
 """
 
 import os, sys
