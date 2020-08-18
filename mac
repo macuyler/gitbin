@@ -42,13 +42,25 @@ def get_installed():
         installed = list(filter(lambda pkg: len(pkg) > 0, installed))
     return installed
 
+def install_usage():
+    usage = [
+        'install git-repo [-p]\n',
+        '  # Options:',
+        '    * -p /path/to/bin',
+        '      (Example: -p /bin) (Note: Must start with / )'
+    ]
+    show_usage(sub='\n'.join(usage))
+    return
 def install(args):
     pkgs = get_installed()
-    if len(args) == 1 or len(args) == 2:
+    if len(args) >= 1:
         url = args[0]
         binpath = ''
-        if len(args) == 2:
-            binpath = args[1]
+        if len(args) == 3 and args[1] == '-p':
+            binpath = args[2]
+        elif len(args) != 1:
+            install_usage()
+            return
         us = url.split('/')
         name = us[len(us) -1].replace('.git', '')
         log(f'Cloning {name} from {url}', pad=True)
@@ -66,13 +78,7 @@ def install(args):
             log(f'Package called "{name}" already installed!', err=True)
         log(dunn=True)
     else:
-        usage = [
-            'install git-repo [-p]\n',
-            '  # Options:',
-            '    * -p /path/to/bin',
-            '      (Example: -p /bin) (Note: Must start with / )'
-        ]
-        show_usage(sub='\n'.join(usage))
+        install_usage()
     return
 
 def remove(args):
