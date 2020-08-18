@@ -44,8 +44,11 @@ def get_installed():
 
 def install(args):
     pkgs = get_installed()
-    if len(args) == 1:
+    if len(args) == 1 or len(args) == 2:
         url = args[0]
+        binpath = ''
+        if len(args) == 2:
+            binpath = args[1]
         us = url.split('/')
         name = us[len(us) -1].replace('.git', '')
         log(f'Cloning {name} from {url}', pad=True)
@@ -53,7 +56,7 @@ def install(args):
             _, err = Popen(f'cd ~/.macbin/ && git clone {url}', shell=True, stderr=PIPE).communicate()
             if FATAL not in err.decode():
                 with open(f'{Path.home()}/.macbin/.path', 'a')  as path:
-                    path.write(f':{Path.home()}/.macbin/{name}')
+                    path.write(f':{Path.home()}/.macbin/{name}{binpath}')
                     path.close()
                 log(f'Successfully installed {name}!')
             else:
@@ -63,7 +66,13 @@ def install(args):
             log(f'Package called "{name}" already installed!', err=True)
         log(dunn=True)
     else:
-        show_usage(sub='install git-repo')
+        usage = [
+            'install git-repo [-p]\n',
+            '  # Options:',
+            '    * -p /path/to/bin',
+            '      (Example: -p /bin) (Note: Must start with / )'
+        ]
+        show_usage(sub='\n'.join(usage))
     return
 
 def remove(args):
@@ -76,7 +85,7 @@ def remove(args):
             new_path = []
             with open(f'{Path.home()}/.macbin/.path', 'r') as path:
                 ps  = path.readline().strip().split(':')
-                fps = list(filter(lambda x: x.replace(f'{Path.home()}/.macbin/', '') != name, ps))
+                fps = list(filter(lambda x: x.replace(f'{Path.home()}/.macbin/', '').split('/')[0] != name, ps))
                 new_path = ':'.join(fps)
                 path.close()
             with open(f'{Path.home()}/.macbin/.path', 'w') as path:
