@@ -32,6 +32,7 @@ FATAL = 'fatal: '
 COULD_NOT_READ = 'Could not read from remote repository.'
 
 def get_installed():
+    """ Return a list of installed packages """
     installed = []
     p = Popen('ls ~/.macbin', shell=True, stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
@@ -43,6 +44,7 @@ def get_installed():
     return installed
 
 def install_usage():
+    """ Print usage information for install command """
     usage = [
         'install git-repo [-p]\n',
         '  # Options:',
@@ -52,6 +54,7 @@ def install_usage():
     show_usage(sub='\n'.join(usage))
     return
 def install(args):
+    """ Install a package to your macbin """
     pkgs = get_installed()
     if len(args) >= 1:
         url = args[0]
@@ -82,6 +85,7 @@ def install(args):
     return
 
 def remove(args):
+    """ Remove a package from your macbin """
     pkgs = get_installed()
     if len(args) == 1:
         name = args[0]
@@ -106,6 +110,7 @@ def remove(args):
     return
 
 def upgrade(args):
+    """ Upgrade a package in your macbin """
     pkgs = get_installed()
     if len(args) == 1:
         name = args[0]
@@ -131,6 +136,7 @@ CMD_FUNCS = {
 }
 
 def main(cmd, args):
+    """ Find and run function specified in arguments """
     cmd = cmd.strip().lower()
     if cmd in COMMANDS or cmd in SHORT_COMMANDS:
         func = CMD_FUNCS[cmd[0]]
