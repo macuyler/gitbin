@@ -95,7 +95,7 @@ def upgrade(args):
         if name in pkgs:
             _, err = Popen(f'cd ~/.macbin/{name} && git pull', shell=True, stdout=PIPE, stderr=PIPE).communicate()
             if COULD_NOT_READ in err.decode():
-                log(err.decode, blank=True, pad=True)
+                log(err.decode(), blank=True, pad=True)
                 log(f'Failed to upgrade {name}!', err=True)
             else:
                 log(f'Successfully upgraded {name}!')
