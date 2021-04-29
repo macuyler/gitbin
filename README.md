@@ -22,3 +22,8 @@ This is a cli tool for automating all the things I don't want to do!
 export PATH="$PATH$(cat ~/.macbin/.path)"
 ```
 
+## Upgrading
+To upgrade your version of _mac_, you can use the following command:
+```
+mac upgrade mac
+```
