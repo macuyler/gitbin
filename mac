@@ -20,8 +20,9 @@ repos bin -> ~/.macbin/
 """
 
 import sys
-from src.output import show_usage
+
 from src.bin import install, remove, upgrade
+from src.output import show_usage
 
 COMMANDS = ['install', 'remove', 'upgrade']
 SHORT_COMMANDS = list(map(lambda x: x[0], COMMANDS))
@@ -32,15 +33,16 @@ CMD_FUNCS = {
     'u': upgrade,
 }
 
-def main(cmd, args):
-    # Find and run function specified in arguments.
+def main(cmd, fargs):
+    """
+    Find and run function specified in arguments.
+    """
     cmd = cmd.strip().lower()
     if cmd in COMMANDS or cmd in SHORT_COMMANDS:
         func = CMD_FUNCS[cmd[0]]
-        func(args)
+        func(fargs)
     else:
         show_usage(COMMANDS)
-    return
 
 if __name__ == '__main__':
     args = sys.argv
@@ -49,4 +51,3 @@ if __name__ == '__main__':
         main(command, args[2:])
     else:
         show_usage(COMMANDS)
-
