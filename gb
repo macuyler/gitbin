@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
 
-# ******************************************* #
-#                                             #
-#    ** Macuyler's Automation Cli (MAC) **    #
-# This is a cli tool for automating all the   #
-# things I don't want to do!                  #
-#                                             #
-# ******************************************* #
-
 """
 # Usage
-- mac
-  - install (Install repos from github)
+- gb
+  - install (Install git repos)
   - remove  (Remove installed repos)
   - upgrade (Upgrade installed repos)
 
 # Info
-repos bin -> ~/.macbin/
+repo bin -> ~/.gitbin/
 """
 
 import sys
@@ -34,9 +26,8 @@ CMD_FUNCS = {
 }
 
 def main(cmd, fargs):
-    """
-    Find and run function specified in arguments.
-    """
+    """Find and run function specified in arguments."""
+
     cmd = cmd.strip().lower()
     if cmd in COMMANDS or cmd in SHORT_COMMANDS:
         func = CMD_FUNCS[cmd[0]]
