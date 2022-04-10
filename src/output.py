@@ -29,9 +29,9 @@ def show_usage(commands=[], sub=None):
     """
     print('\n Usage: ')
     for cmd in commands:
-        print(f'  - mac {cmd}')
+        print(f'  - gb {cmd}')
     if sub is not None:
         if isinstance(sub, list):
             sub = '\n'.join(sub)
-        print(f'  - mac {sub}')
+        print(f'  - gb {sub}')
     print()
