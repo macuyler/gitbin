@@ -2,4 +2,4 @@
 git clone https://github.com/macuyler/gitbin.git /tmp/gitbin_install && \
 	/tmp/gitbin_install/gb install https://github.com/macuyler/gitbin.git && \
 	rm -rf /tmp/gitbin_install && \
-	echo $'\n\n * Successfully installed Git Bin!'
+	echo ' * Successfully installed Git Bin!'
